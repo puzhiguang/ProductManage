@@ -11,45 +11,48 @@ import SwiftUI
 struct ProductList: View {
     @ObservedObject var searchBar: SearchBar = SearchBar()
     var body: some View {
-        NavigationView {
-            List {
-                if self.searchBar.text == "Dyson" {
-                    ForEach(CategoriesData) { category in
-                        Section(header:
-                            HStack {
-                                Text(category.title)
-                                    .font(.headline)
-                                    .foregroundColor(Color("Basalt Grey"))
-                                    .padding()
-                                Spacer()
-                            }
-                            .background(Color("Brilliance"))
-                            .listRowInsets(EdgeInsets(
-                                top: 0,
-                                leading: 0,
-                                bottom: 0,
-                                trailing: 0))
-                        ) {
-                            ForEach(category.products) { landmark in
-                                productListRow(landmark: landmark)
+        GeometryReader { geo in
+            Color("Brilliance")
+            NavigationView {
+                List {
+                    if self.searchBar.text == "Dyson" {
+                        ForEach(CategoriesData) { category in
+                            Section(header:
+                                HStack {
+                                    Text(category.title)
+                                        .font(.headline)
+                                        .foregroundColor(Color("Basalt Grey"))
+                                        .padding()
+                                    Spacer()
+                                }
+                                .background(Color("Brilliance"))
+                                .listRowInsets(EdgeInsets(
+                                    top: 0,
+                                    leading: 0,
+                                    bottom: 0,
+                                    trailing: 0))
+                            ) {
+                                ForEach(category.products) { landmark in
+                                    productListRow(landmark: landmark)
+                                }
                             }
                         }
-                    }
-                } else if self.searchBar.text != "Dyson" && !self.searchBar.text.isEmpty {
-                    VStack {
-                        Spacer()
-                        Text("not result")
-                            .font(.headline)
-                            .foregroundColor(Color("Basalt Grey"))
-                            .padding()
-                        Spacer()
+                    } else if self.searchBar.text != "Dyson" && !self.searchBar.text.isEmpty {
+                        VStack(alignment: .center) {
+                            Text("No result")
+                                .lineLimit(nil)
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(Color("Basalt Grey"))
+                                .padding([.trailing], 40)
+                        }
+                        .frame(width: geo.size.width, height: geo.size.height / 4, alignment: /*@START_MENU_TOKEN@*/ .center/*@END_MENU_TOKEN@*/)
                     }
                 }
+                .navigationBarTitle(Text("Search"))
+                .add(self.searchBar)
+                .listSeparatorStyle(style: .none)
             }
-            .navigationBarTitle(Text("Search"))
-            .add(self.searchBar)
-            .listSeparatorStyle(style: .none)
-        } 
+        }
     }
 }
 
